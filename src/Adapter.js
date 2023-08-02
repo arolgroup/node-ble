@@ -136,15 +136,15 @@ class Adapter {
    * @async
    * @returns {Device}
    */
-  async waitDevice(uuid, timeout = DEFAULT_TIMEOUT, discoveryInterval = DEFAULT_DISCOVERY_INTERVAL) {
+  async waitDevice (uuid, timeout = DEFAULT_TIMEOUT, discoveryInterval = DEFAULT_DISCOVERY_INTERVAL) {
     // this should be optimized subscribing InterfacesAdded signal
     const cancellable = []
     const clearTimers = () => {
-      for(const cancel of cancellable) {
+      for (const cancel of cancellable) {
         cancel()
       }
     }
-    const device = await new Promise(async (resolve, reject) => {
+    const device = await new Promise((resolve, reject) => {
       const check = () => {
         this.getDevice(uuid)
           .then(device => {
@@ -166,9 +166,9 @@ class Adapter {
       cancellable.push(() => clearInterval(intervalHandler))
       cancellable.push(() => clearTimeout(timeoutHandler))
       check()
-    });
+    })
 
-    return device;
+    return device
   }
 
   /**

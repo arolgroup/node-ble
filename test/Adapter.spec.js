@@ -118,7 +118,7 @@ describe('waitDevice', () => {
     const res = expect(adapter.waitDevice('22:22:22:22:22:22', 90 * 1000, 500)).resolves.toBeInstanceOf(Device)
 
     jest.advanceTimersByTime(2000)
-    expect(adapter.helper.children).toHaveBeenCalledTimes(4)
+    expect(adapter.helper.children).toHaveBeenCalledTimes(5)
 
     return res
   })
@@ -137,7 +137,7 @@ describe('waitDevice', () => {
     const res = expect(adapter.waitDevice('44:44:44:44:44:44', 2 * 1000, 500)).rejects.toThrow()
 
     jest.advanceTimersByTime(2000)
-    expect(adapter.helper.children).toHaveBeenCalledTimes(4)
+    expect(adapter.helper.children).toHaveBeenCalledTimes(5)
 
     return res
   })
