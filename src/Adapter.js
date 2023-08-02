@@ -136,15 +136,20 @@ class Adapter {
    * @async
    * @returns {Device}
    */
-  async waitDevice (uuid, timeout = DEFAULT_TIMEOUT, discoveryInterval = DEFAULT_DISCOVERY_INTERVAL) {
+  async waitDevice(uuid, timeout = DEFAULT_TIMEOUT, discoveryInterval = DEFAULT_DISCOVERY_INTERVAL) {
     // this should be optimized subscribing InterfacesAdded signal
-
     const cancellable = []
-    const discoveryHandler = new Promise((resolve, reject) => {
+    const clearTimers = () => {
+      for(const cancel of cancellable) {
+        cancel()
+      }
+    }
+    const device = await new Promise(async (resolve, reject) => {
       const check = () => {
         this.getDevice(uuid)
           .then(device => {
             resolve(device)
+            clearTimers()
           })
           .catch(e => {
             if (e.message !== 'Device not found') {
@@ -153,24 +158,17 @@ class Adapter {
           })
       }
 
-      const handler = setInterval(check, discoveryInterval)
-      cancellable.push(() => clearInterval(handler))
-    })
-
-    const timeoutHandler = new Promise((resolve, reject) => {
-      const handler = setTimeout(() => {
+      const intervalHandler = setInterval(check, discoveryInterval)
+      const timeoutHandler = setTimeout(() => {
         reject(new Error('operation timed out'))
+        clearTimers()
       }, timeout)
+      cancellable.push(() => clearInterval(intervalHandler))
+      cancellable.push(() => clearTimeout(timeoutHandler))
+      check()
+    });
 
-      cancellable.push(() => clearTimeout(handler))
-    })
-
-    const device = await Promise.race([discoveryHandler, timeoutHandler])
-
-    for (const cancel of cancellable) {
-      cancel()
-    }
-    return device
+    return device;
   }
 
   /**
