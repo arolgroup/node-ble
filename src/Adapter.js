@@ -172,6 +172,22 @@ class Adapter {
   }
 
   /**
+   * Removes the remote device object at the given path including cached information such as bonding information
+   * @param {string} uuid - Device Name.
+   * @async
+   */
+  async removeDevice (uuid) {
+    const serializedUUID = Adapter.serializeUUID(uuid)
+
+    const devices = await this.helper.children()
+    if (!devices.includes(serializedUUID)) {
+      throw new Error('Device not found')
+    }
+    const deviceObj = `/org/bluez/${this.adapter}/${serializedUUID}`
+    await this.helper.callMethod('RemoveDevice', deviceObj)
+  }
+
+  /**
    * Human readable class identifier.
    * @async
    * @returns {string}

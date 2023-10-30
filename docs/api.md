@@ -70,6 +70,7 @@ Adapter class interacts with the local bluetooth adapter
     * [.devices()](#Adapter+devices) ⇒ <code>Array.&lt;string&gt;</code>
     * [.getDevice(uuid)](#Adapter+getDevice) ⇒ [<code>Device</code>](#Device)
     * [.waitDevice(uuid, [timeout], [discoveryInterval])](#Adapter+waitDevice) ⇒ [<code>Device</code>](#Device)
+    * [.removeDevice(uuid)](#Adapter+removeDevice)
     * [.toString()](#Adapter+toString) ⇒ <code>string</code>
 
 <a name="Adapter+getAddress"></a>
@@ -149,6 +150,17 @@ Wait that a specific device is found, then init a device instance and returns it
 | uuid | <code>string</code> |  | Device Name. |
 | [timeout] | <code>number</code> | <code>120000</code> | Time (ms) to wait before throwing a timeout expection. |
 | [discoveryInterval] | <code>number</code> | <code>1000</code> | Interval (ms) frequency that verifies device availability. |
+
+<a name="Adapter+removeDevice"></a>
+
+### adapter.removeDevice(uuid)
+Removes the remote device object at the given path including cached information such as bonding information
+
+**Kind**: instance method of [<code>Adapter</code>](#Adapter)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uuid | <code>string</code> | Device Name. |
 
 <a name="Adapter+toString"></a>
 

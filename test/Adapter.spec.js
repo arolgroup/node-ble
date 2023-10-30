@@ -142,3 +142,17 @@ describe('waitDevice', () => {
     return res
   })
 })
+
+test('removeDevice', async () => {
+  const adapter = new Adapter(dbus, 'hci0')
+
+  adapter.helper.children.mockResolvedValue([
+    'dev_11_11_11_11_11_11',
+    'dev_22_22_22_22_22_22',
+    'dev_33_33_33_33_33_33'
+  ])
+
+  await expect(adapter.removeDevice('00:00:00:00:00:00')).rejects.toThrow('Device not found')
+  await expect(adapter.removeDevice('11:11:11:11:11:11')).resolves.toBeUndefined()
+  expect(Device).toHaveBeenCalledWith(dbus, 'hci0', 'dev_11_11_11_11_11_11')
+})
